@@ -75,9 +75,14 @@ Deployed on **Vercel** for scalability and performance:
 
 ## 📽️ Demo Video
 
-Explore the features and functionalities in action:
 
-[![Watch the Demo](https://img.youtube.com/vi/6aa3f61d4080423ba5b6b42d8166a3bb/0.jpg)](https://www.loom.com/share/6aa3f61d4080423ba5b6b42d8166a3bb?sid=82121bb5-11f3-48aa-90c2-97400c4cdf1e)
+### Admin Dashboard 🎛️
+
+  <p align="center">
+    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/Dashboardadmin.gif" alt="Admin Dashboard" />
+  </p>
+
+
 
 ---
 
