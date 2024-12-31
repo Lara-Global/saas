@@ -81,7 +81,11 @@ Deployed on **Vercel** for scalability and performance:
   <p align="center">
     <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/Dashboardadmin.gif" alt="Admin Dashboard" />
   </p>
+### Admin Dashboard Invoices
 
+<p align="center">
+    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/admininvoices.gif" alt="Admin Dashboard" />
+  </p>
 
 
 ---
