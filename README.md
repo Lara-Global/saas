@@ -1,6 +1,30 @@
 # 🌐 LARA - SAAS
 
-Welcome to **LARA**, an all-in-one microservice for managing users, products, and orders! 🚀 Built for modern web applications, LARA combines scalability, flexibility, and simplicity to empower businesses.
+## 📽️ Demo Video
+
+### Admin Dashboard 🎛️
+
+  <p align="center">
+    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/Dashboardadmin.gif" alt="Admin Dashboard" />
+  </p>
+
+### Admin Dashboard Invoices
+
+<p align="center">
+    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/admininvoices.gif" alt="Admin Dashboard" />
+  </p>
+
+### Manager 
+
+<p align="center">
+    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/manager.gif" alt="Manager" />
+  </p>
+
+### Employee 
+
+<p align="center">
+    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/employee.gif" alt="Employee" />
+  </p>
 
 ---
 
@@ -10,7 +34,6 @@ Welcome to **LARA**, an all-in-one microservice for managing users, products, an
 - [⚡ Quick Start](#quick-start)
 - [⚙️ Configuration](#configuration)
 - [🚀 Deployment](#deployment)
-- [📽️ Demo Video](#demo-video)
 - [📊 Badges](#badges)
 - [📜 License](#license)
 
@@ -70,37 +93,6 @@ Deployed on **Vercel** for scalability and performance:
 1. Push your code to GitHub.
 2. Connect your repository to Vercel.
 3. Deploy with one click. ✅
-
----
-
-## 📽️ Demo Video
-
-
-### Admin Dashboard 🎛️
-
-  <p align="center">
-    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/Dashboardadmin.gif" alt="Admin Dashboard" />
-  </p>
-### Admin Dashboard Invoices
-
-<p align="center">
-    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/admininvoices.gif" alt="Admin Dashboard" />
-  </p>
-
-  ### Manager 
-
-<p align="center">
-    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/manager.gif" alt="Manager" />
-  </p>
-
-   ### Employee 
-
-<p align="center">
-    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/employee.gif" alt="Employee" />
-  </p>
-
-
-
 
 ---
 
