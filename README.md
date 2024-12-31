@@ -93,6 +93,14 @@ Deployed on **Vercel** for scalability and performance:
     <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/manager.gif" alt="Manager" />
   </p>
 
+   ### Employee 
+
+<p align="center">
+    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/employee.gif" alt="Employee" />
+  </p>
+
+
+
 
 ---
 
