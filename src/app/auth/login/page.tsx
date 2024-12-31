@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -19,12 +18,11 @@ export default function HelloWorld() {
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
                 credentials: "include",
             });
@@ -32,34 +30,30 @@ export default function HelloWorld() {
             const data = await response.json();
 
             if (response.ok) {
-                localStorage.setItem("userId", data.id);
-                localStorage.setItem("token", data.token);
-                localStorage.setItem("role", data.role);
-                localStorage.setItem("company", data.company);
-                localStorage.setItem("currency", data.currency);
+                const { id, token, role, company, currency } = data;
 
-                document.cookie = `token1=${data.token}; path=/; max-age=3600; SameSite=Strict`;
+                // Store data securely
+                localStorage.setItem("userId", id);
+                localStorage.setItem("token", token);
+                localStorage.setItem("role", role);
+                localStorage.setItem("company", company);
+                localStorage.setItem("currency", currency);
+                document.cookie = `token1=${token}; path=/; max-age=3600; SameSite=Strict`;
 
-                // Show success toast
                 toast.success("Login successful");
 
                 // Redirect based on role
-                switch (data.role) {
-                    case "Admin":
-                        return router.push("/admin");
-                    case "Employee":
-                        return router.push("/employee");
-                    case "Manager":
-                        return router.push("/manager");
-                    case "SuperAdmin":
-                        return router.push("/super");
-                }
+                const roleRedirects: Record<string, string> = {
+                    Admin: "/admin",
+                    Employee: "/employee",
+                    Manager: "/manager",
+                    SuperAdmin: "/super",
+                };
+                router.push(roleRedirects[role]);
             } else {
-                // Show error toast
                 toast.error(data.message || "An error occurred");
             }
-        } catch (error) {
-            // Show error toast for unexpected errors
+        } catch {
             toast.error("An error occurred during login");
         }
     };
@@ -68,12 +62,9 @@ export default function HelloWorld() {
         <div>
             <Navbar />
             <Toaster />
-            <div className="flex items-center justify-center "> {/* Full height screen centered */}
-                <div className="max-w-md mx-auto mt-16 p-8 bg-background shadow-lg rounded-lg">
-                    <HyperText
-                        className="text-4xl font-bold  "
-                        text="Welcome Back"
-                    />
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="max-w-md mx-auto p-8 bg-background shadow-lg rounded-lg">
+                    <HyperText className="text-4xl font-bold mb-4 text-center" text="Welcome Back" />
                     <p className="text-muted-foreground text-center mb-8">
                         Enter your credentials below to access your account.
                     </p>
@@ -86,7 +77,6 @@ export default function HelloWorld() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="you@domain.com"
-                                className="mt-2"
                                 required
                             />
                         </div>
@@ -98,26 +88,20 @@ export default function HelloWorld() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••••"
-                                className="mt-2"
                                 required
                             />
                         </div>
-                        <Link
-                            href="/auth/password/forgot"
-                            
-                        >
-                            <Button type="submit" variant="link" >
-                                Forgot password?
-                            </Button> 
-                        </Link>
+                        <div className="flex justify-between items-center">
+                            <Link href="/auth/password/forgot">
+                                <Button type="button" variant="link">Forgot password?</Button>
+                            </Link>
+                        </div>
                         <Button type="submit" variant="default" className="w-full">
                             Submit
                         </Button>
                     </form>
                 </div>
             </div>
-            <br />
-
             <Footer />
         </div>
     );
