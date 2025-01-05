@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import axios from "axios";
@@ -70,7 +70,7 @@ export default function InvoiceDetail({ invoiceId, creationDate, items, currency
     useEffect(() => {
         fetchCompanyDetails();
     }, []);
-    const companyLogo = localStorage.getItem("companyLogo") || company.logo;
+    const companyLogo = useMemo(() => localStorage.getItem("companyLogo") || company.logo, [company.logo]);
 
     return (
         <div className={cn("print-area max-w-4xl mx-auto p-10   border border-purple-600 rounded-lg shadow-lg")}>

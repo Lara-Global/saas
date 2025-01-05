@@ -5,8 +5,6 @@ import axios from 'axios';
 import InvoiceDetail, { InvoiceDetailItem } from '@/components/InvoiceDetail';
 import { useSearchParams } from 'next/navigation';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-
-
 import getCompanyCurrencyFromLocalStorage from "@/components/tokens/company";
 
 const InvoiceDetailPage: React.FC = () => {
@@ -19,50 +17,50 @@ const InvoiceDetailPage: React.FC = () => {
     const [currency, setCurrency] = useState<string>('DH');
     const searchParams = useSearchParams();
 
+    const fetchInvoiceDetails = async (id: string, token: string) => {
+        try {
+            const response = await axios.get(
+                `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/invoices/${id}/details`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                }
+            );
+            const invoiceData = response.data;
+
+            setItems(invoiceData.items);
+            setTotalAmount(invoiceData.totalPrice);
+            setInvoiceId(id);
+            setCreationDate(invoiceData.createdAt);
+        } catch (error) {
+            setError('Failed to fetch invoice details');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         const storedCurrency = getCompanyCurrencyFromLocalStorage();
         if (storedCurrency) {
             setCurrency(storedCurrency);
-        };
-        const fetchInvoiceDetails = async () => {
-            const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+        }
 
-            if (!token) {
-                setError('No token found');
-                setLoading(false);
-                return;
-            }
+        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+        if (!token) {
+            setError('No token found');
+            setLoading(false);
+            return;
+        }
 
-            try {
-                const id = searchParams.get('id');
-                if (!id) {
-                    setError('No invoice ID found in URL');
-                    setLoading(false);
-                    return;
-                }
+        const id = searchParams.get('id');
+        if (!id) {
+            setError('No invoice ID found in URL');
+            setLoading(false);
+            return;
+        }
 
-                const response = await axios.get(
-                    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/invoices/${id}/details`,
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                        },
-                    }
-                );
-                const invoiceData = response.data;
-
-                setItems(invoiceData.items);
-                setTotalAmount(invoiceData.totalPrice);
-                setInvoiceId(id);
-                setCreationDate(invoiceData.createdAt);
-            } catch (error) {
-                setError('Failed to fetch invoice details');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchInvoiceDetails();
+        fetchInvoiceDetails(id, token);
     }, [searchParams]);
 
     const handlePrint = () => {
@@ -92,7 +90,6 @@ const InvoiceDetailPage: React.FC = () => {
     }
 
     return (
-
         <div className="p-6">
             <InvoiceDetail
                 invoiceId={invoiceId}
@@ -102,7 +99,6 @@ const InvoiceDetailPage: React.FC = () => {
                 totalAmount={totalAmount}
                 onPrint={handlePrint}
             />
-
         </div>
     );
 };
