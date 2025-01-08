@@ -1,11 +1,27 @@
-# 🌐 LARA 
-
-
-
+#LARA 
   <p align="center">
     <img src="https://i.pinimg.com/736x/f1/b7/6d/f1b76d554c5b5b62b7d5b7629bab485d.jpg" alt="LARA" />
   </p>
 
+# Payment Gateway
+
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+
+![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-yellow.svg)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+![Issues](https://img.shields.io/github/issues/Lara-Global/Payment-Gateway.svg)
+![Forks](https://img.shields.io/github/forks/Lara-Global/Payment-Gateway.svg)
+![Stars](https://img.shields.io/github/stars/Lara-Global/Payment-Gateway.svg)
+![Watchers](https://img.shields.io/github/watchers/Lara-Global/Payment-Gateway.svg)
+
+
+
+## Overview
+
+This repository contains the payment gateway integration for LARA, allowing businesses to accept payments online easily and securely.
+
+...
 
 
 ## 📽️ Demo Video
