@@ -23,6 +23,11 @@ This repository contains the payment gateway integration for LARA, allowing busi
 
 
 
+
+ <p align="center">
+    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/payment.gif" alt="Payment" />
+  </p>
+
 ## 📽️ Demo Video
 
 ### Admin Dashboard 🎛️
