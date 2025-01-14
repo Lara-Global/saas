@@ -60,6 +60,11 @@ This repository contains the payment gateway integration for LARA, allowing busi
     <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/employee.gif" alt="Employee" />
   </p>
 
+  A seamless way for businesses to:
+✔ Update and personalize their invoices anytime.
+✔ Add logos and branding effortlessly.
+✔ Create sleek, modern designs that leave a lasting impression.
+
 ---
 
 ## 📖 Table of Contents
