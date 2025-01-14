@@ -1,72 +1,88 @@
-# LARA 
-  <p align="center">
-    <img src="https://i.pinimg.com/736x/f1/b7/6d/f1b76d554c5b5b62b7d5b7629bab485d.jpg" alt="LARA" />
-  </p>
+# LARA Payment Gateway
 
-# Payment Gateway
+<p align="center">
+  <img src="https://i.pinimg.com/736x/f1/b7/6d/f1b76d554c5b5b62b7d5b7629bab485d.jpg" alt="LARA" width="300" />
+</p>
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+---
 
-![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
-![Version](https://img.shields.io/badge/version-1.0.0-yellow.svg)
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
-![Issues](https://img.shields.io/github/issues/Lara-Global/Payment-Gateway.svg)
-![Forks](https://img.shields.io/github/forks/Lara-Global/Payment-Gateway.svg)
-![Stars](https://img.shields.io/github/stars/Lara-Global/Payment-Gateway.svg)
-![Watchers](https://img.shields.io/github/watchers/Lara-Global/Payment-Gateway.svg)
+<p align="center">
+  <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" />
+  <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg" alt="Contributions Welcome" />
+  <img src="https://img.shields.io/badge/version-1.0.0-yellow.svg" alt="Version" />
+  <img src="https://img.shields.io/github/issues/Lara-Global/Payment-Gateway.svg" alt="Issues" />
+  <img src="https://img.shields.io/github/forks/Lara-Global/Payment-Gateway.svg" alt="Forks" />
+  <img src="https://img.shields.io/github/stars/Lara-Global/Payment-Gateway.svg" alt="Stars" />
+  <img src="https://img.shields.io/github/watchers/Lara-Global/Payment-Gateway.svg" alt="Watchers" />
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome" />
+</p>
 
+---
 
+## 🌐 Overview
 
-## Overview
+LARA Payment Gateway allows businesses to securely accept payments online with ease. It integrates seamlessly into the LARA platform, offering advanced features for managing payments, invoices, and transactions.
 
-This repository contains the payment gateway integration for LARA, allowing businesses to accept payments online easily and securely.
-
-
-
-
- <p align="center">
-    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/payment.gif" alt="Payment" />
-  </p>
+---
 
 ## 📽️ Demo Video
 
-### Admin Dashboard 🎛️
+<p align="center">
+  <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/payment.gif" alt="Payment Demo" width="700" />
+</p>
 
-  <p align="center">
-    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/Dashboardadmin.gif" alt="Admin Dashboard" />
-  </p>
+---
 
-### Admin Dashboard Invoices
+## 💻 Admin Dashboard
+
+### Dashboard Overview 🎛️
 
 <p align="center">
-    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/admininvoices.gif" alt="Admin Dashboard" />
-  </p>
+  <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/Dashboardadmin.gif" alt="Admin Dashboard" width="700" />
+</p>
+
+### Invoice Management 📊
+
+<p align="center">
+  <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/admininvoices.gif" alt="Admin Dashboard Invoices" width="700" />
+</p>
+
 <p align="center">
   <video src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/invoiceDetaile.mp4" controls width="600">
     Your browser does not support the video tag.
   </video>
 </p>
 
-
-### Manager 
-
 <p align="center">
-    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/manager.gif" alt="Manager" />
-  </p>
-
-### Employee 
-
-<p align="center">
-    <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/employee.gif" alt="Employee" />
-  </p>
-
-  A seamless way for businesses to:
-✔ Update and personalize their invoices anytime.
-✔ Add logos and branding effortlessly.
-✔ Create sleek, modern designs that leave a lasting impression.
+  <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/invoice.gif" alt="Invoice Overview" width="700" />
+</p>
 
 ---
 
+## 🧾 Features
+
+A seamless way for businesses to:
+- ✔️ Update and personalize invoices.
+- ✔️ Add logos and branding.
+- ✔️ Create sleek, modern designs that leave a lasting impression.
+
+---
+
+## 📊 Roles
+
+### Manager Dashboard
+
+<p align="center">
+  <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/manager.gif" alt="Manager Dashboard" width="700" />
+</p>
+
+### Employee Dashboard
+
+<p align="center">
+  <img src="https://github.com/Lara-Global/Payment-Gateway/blob/main/videos/employee.gif" alt="Employee Dashboard" width="700" />
+</p>
+
+---
 ## 📖 Table of Contents
 
 - [✨ Features](#features)
