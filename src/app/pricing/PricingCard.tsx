@@ -7,6 +7,10 @@ import { cn } from "@/lib/utils";
 import { useRouter } from 'next/navigation';
 import { loadStripe } from "@stripe/stripe-js";
 
+import { createCheckoutSession } from "@/components/api/stripe-pro";
+import { motion } from 'framer-motion';
+import GridPattern from "@/components/ui/grid-pattern";
+
 // Initialize Stripe.js client
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -20,6 +24,14 @@ type PricingCardProps = {
     actionLabel: string;
     popular?: boolean;
     exclusive?: boolean;
+    translations: {
+        save: string;
+        custom: string;
+        perYear: string;
+        perMonth: string;
+        contactSales: string;
+        free: string;
+    };
 };
 
 const PricingCard = ({
@@ -32,99 +44,130 @@ const PricingCard = ({
     actionLabel,
     popular,
     exclusive,
+    translations
 }: PricingCardProps) => {
     const router = useRouter();
 
-    const handleButtonClick = async () => {
-        if (actionLabel === "Contact Sales") {
-            router.push('/contact');
-        } else {
+    const handleUpgrade = async () => {
+        try {
+            // Check if userId exists in localStorage
+            const userId = localStorage.getItem("userId");
+
+            if (!userId) {
+                // Redirect to signup page if not authenticated
+                router.push("/auth/sign-up");
+                return;
+            }
+
             const stripe = await stripePromise;
 
+            // Determine price based on subscription type
             const price = isYearly ? yearlyPrice : monthlyPrice;
 
-            try {
-                // Call backend API to create a Stripe Checkout session
-                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/create-checkout-session`, {
-
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        items: [
-                            {
-                                name: title,
-                                price: price! * 100, // Stripe expects price in cents
-                                quantity: 1,
-                            },
-                        ],
-                    }),
-                });
-
-                const session = await response.json();
-
-                // Redirect to Stripe Checkout page
-                const result = await stripe?.redirectToCheckout({
-                    sessionId: session.id,
-                });
-
-                if (result?.error) {
-                    console.error(result.error.message);
-                }
-            } catch (error) {
-                console.error("Error creating Stripe session:", error);
+            if (!price) {
+                console.error("Price is required.");
+                return;
             }
+
+            const items = [
+                {
+                    name: title,
+                    description: description,
+                    price: price * 100,
+                    quantity: 1,
+                },
+            ];
+
+            const session = await createCheckoutSession(userId, items);
+
+            // Redirect to Stripe Checkout page
+            const result = await stripe?.redirectToCheckout({
+                sessionId: session.id,
+            });
+
+            if (result?.error) {
+                console.error(result.error.message);
+            }
+        } catch (error) {
+            console.error("Error during the upgrade process:", error);
         }
     };
 
     return (
-        <Card
-            className={cn(`w-72 flex flex-col justify-between py-1 ${popular ? "border-rose-400" : "border-zinc-700"} mx-auto sm:mx-0`, {
-                "animate-background-shine bg-white dark:bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] transition-colors":
-                    exclusive,
-            })}>
-            <div>
-                <CardHeader className="pb-8 pt-4">
-                    {isYearly && yearlyPrice && monthlyPrice ? (
-                        <div className="flex justify-between">
-                            <CardTitle className="text-zinc-700 dark:text-zinc-300 text-lg">{title}</CardTitle>
-                            <div
-                                className={cn("px-2.5 rounded-xl h-fit text-sm py-1 bg-zinc-200 text-black dark:bg-zinc-800 dark:text-white", {
-                                    "bg-gradient-to-r from-orange-400 to-rose-400 dark:text-black ": popular,
-                                })}>
-                                Save ${monthlyPrice * 12 - yearlyPrice}
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="relative max-w-md mx-auto"
+        >
+            {exclusive && (
+                <div className="absolute inset-0 z-0">
+                    <GridPattern />
+                </div>
+            )}
+            <Card
+                className={cn(`relative z-10 flex flex-col justify-between py-8 px-6 border rounded-xl shadow-md`, {
+                    "border-blue-200": popular,
+                    "border-blue-600": !popular,
+                    "dark:bg-gray-900": exclusive,
+                })}
+            >
+                <div>
+                    <CardHeader className="pb-8">
+                        {/* Title and Discount Badge */}
+                        {isYearly && yearlyPrice && monthlyPrice ? (
+                            <div className="flex justify-between items-center text-blue-500 dark:text-blue-400">
+                                <CardTitle className="text-2xl font-bold">{title}</CardTitle>
+                                <div
+                                    className={cn("px-4 py-1 rounded-full text-sm font-semibold")}
+                                >
+                                    {translations.save} ${monthlyPrice * 12 - yearlyPrice}
+                                </div>
                             </div>
+                        ) : (
+                            <CardTitle className="text-2xl font-bold">{title}</CardTitle>
+                        )}
+
+                        {/* Price Display */}
+                        <div className="flex items-end mt-4">
+                            <h3 className="text-5xl font-extrabold ">
+                                {yearlyPrice && isYearly ? "$" + yearlyPrice : monthlyPrice ? "$" + monthlyPrice : translations.custom}
+                            </h3>
+                            <span className="text-lg ml-1">{yearlyPrice && isYearly ? translations.perYear : monthlyPrice ? translations.perMonth : null}</span>
                         </div>
-                    ) : (
-                        <CardTitle className="text-zinc-700 dark:text-zinc-300 text-lg">{title}</CardTitle>
-                    )}
-                    <div className="flex gap-0.5">
-                        <h3 className="text-3xl font-bold">{yearlyPrice && isYearly ? "$" + yearlyPrice : monthlyPrice ? "$" + monthlyPrice : "Custom"}</h3>
-                        <span className="flex flex-col justify-end text-sm mb-1">{yearlyPrice && isYearly ? "/year" : monthlyPrice ? "/month" : null}</span>
-                    </div>
-                    <CardDescription className="pt-1.5 h-12">{description}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-2">
-                    {features.map((feature: string) => (
-                        <CheckItem key={feature} text={feature} />
-                    ))}
-                </CardContent>
-            </div>
-            <CardFooter className="mt-2">
-                <Button className="relative inline-flex w-full items-center justify-center rounded-md bg-black text-white dark:bg-white px-6 font-medium  dark:text-black transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50" onClick={handleButtonClick}>
-                    <div className="absolute -inset-0.5 -z-10 rounded-lg bg-gradient-to-b from-[#c7d2fe] to-[#8678f9] opacity-75 blur" />
-                    {actionLabel}
-                </Button>
-            </CardFooter>
-        </Card>
+
+                        <CardDescription className="pt-4 ">{description}</CardDescription>
+                    </CardHeader>
+
+                    {/* Features List */}
+                    <CardContent className="flex flex-col gap-4">
+                        {features.map((feature) => (
+                            <CheckItem key={feature} text={feature} />
+                        ))}
+                    </CardContent>
+                </div>
+
+                {/* Action Button */}
+                <CardFooter className="mt-8">
+                    <Button
+                        variant="outline"
+                        className={cn(
+                            "h-8 rounded-full px-5 font-semibold transition-all duration-200 hover:ring-2 hover:ring-border hover:ring-offset-2 hover:ring-offset-background sm:inline-flex center"
+                        )}
+                        onClick={handleUpgrade}
+                    >
+                        {actionLabel}
+                    </Button>
+                </CardFooter>
+            </Card>
+        </motion.div>
     );
 };
 
 const CheckItem = ({ text }: { text: string }) => (
     <div className="flex gap-2">
         <CheckCircle2 size={18} className="my-auto text-green-400" />
-        <p className="pt-0.5 text-zinc-700 dark:text-zinc-300 text-sm">{text}</p>
+        <p className="pt-0.5 text-sm">{text}</p>
     </div>
 );
 
