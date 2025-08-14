@@ -112,7 +112,6 @@ A seamless way for businesses to:
 
    ```bash
    git clone https://github.com/Lara-Global/Payment-Gateway.git
-   cd your-repository
    ```
 
 2. **Install dependencies:**
