@@ -238,7 +238,6 @@ MIT © [LARA Global](https://github.com/Lara-Global)
 
 <div align="center">
 
-**Made with ❤️ by developers, for developers**
 
 *Star us if LARA helped you build something awesome!* ⭐
 
