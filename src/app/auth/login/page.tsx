@@ -4,105 +4,238 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/Label";
+import { Label } from "@/components/ui/label";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { toast } from "sonner";
 import Toaster from "@/components/Toaster";
 import HyperText from "@/components/ui/hyper-text";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
-export default function HelloWorld() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const router = useRouter();
+interface LoginResponse {
+  id: string;
+  token: string;
+  role: 'Admin' | 'Employee' | 'Manager' | 'SuperAdmin';
+  company: string;
+  currency: string;
+}
 
-    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+interface LoginError {
+  message?: string;
+}
 
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
-                credentials: "include",
-            });
+const ROLE_REDIRECTS: Record<string, string> = {
+  Admin: "/admin",
+  Employee: "/employee", 
+  Manager: "/manager",
+  SuperAdmin: "/super",
+} as const;
 
-            const data = await response.json();
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-            if (response.ok) {
-                const { id, token, role, company, currency } = data;
+  const validateInputs = (): boolean => {
+    if (!email.trim()) {
+      toast.error("Email is required");
+      return false;
+    }
+    
+    if (!password.trim()) {
+      toast.error("Password is required");
+      return false;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return false;
+    }
+    
+    return true;
+  };
 
-                // Store data securely
-                localStorage.setItem("userId", id);
-                localStorage.setItem("token", token);
-                localStorage.setItem("role", role);
-                localStorage.setItem("company", company);
-                localStorage.setItem("currency", currency);
-                document.cookie = `token1=${token}; path=/; max-age=3600; SameSite=Strict`;
+  const storeUserData = (data: LoginResponse): void => {
+    const { id, token, role, company, currency } = data;
+    
+    // Store in localStorage
+    localStorage.setItem("userId", id);
+    localStorage.setItem("token", token);
+    localStorage.setItem("role", role);
+    localStorage.setItem("company", company);
+    localStorage.setItem("currency", currency);
+    
+    // Set secure cookie
+    const cookieOptions = [
+      `token1=${token}`,
+      "path=/",
+      "max-age=3600",
+      "SameSite=Strict",
+      ...(process.env.NODE_ENV === 'production' ? ["Secure"] : [])
+    ].join("; ");
+    
+    document.cookie = cookieOptions;
+  };
 
-                toast.success("Login successful");
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    
+    if (!validateInputs()) return;
+    
+    setIsLoading(true);
+    
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login`, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ 
+          email: email.trim().toLowerCase(), 
+          password 
+        }),
+        credentials: "include",
+      });
 
-                // Redirect based on role
-                const roleRedirects: Record<string, string> = {
-                    Admin: "/admin",
-                    Employee: "/employee",
-                    Manager: "/manager",
-                    SuperAdmin: "/super",
-                };
-                router.push(roleRedirects[role]);
-            } else {
-                toast.error(data.message || "An error occurred");
-            }
-        } catch {
-            toast.error("An error occurred during login");
-        }
-    };
+      const data: LoginResponse | LoginError = await response.json();
 
-    return (
-        <div>
-            <Navbar />
-            <Toaster />
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="max-w-md mx-auto p-8 bg-background shadow-lg rounded-lg">
-                    <HyperText className="text-4xl font-bold mb-4 text-center" text="Welcome Back" />
-                    <p className="text-muted-foreground text-center mb-8">
-                        Enter your credentials below to access your account.
-                    </p>
-                    <form onSubmit={handleLogin} className="space-y-6">
-                        <div>
-                            <Label htmlFor="email">Email:</Label>
-                            <Input
-                                type="email"
-                                id="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                placeholder="you@domain.com"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <Label htmlFor="password">Password:</Label>
-                            <Input
-                                type="password"
-                                id="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                placeholder="••••••••"
-                                required
-                            />
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <Link href="/auth/password/forgot">
-                                <Button type="button" variant="link">Forgot password?</Button>
-                            </Link>
-                        </div>
-                        <Button type="submit" variant="default" className="w-full">
-                            Submit
-                        </Button>
-                    </form>
-                </div>
+      if (response.ok && 'token' in data) {
+        storeUserData(data);
+        toast.success("Login successful! Redirecting...");
+        
+        // Small delay for better UX
+        setTimeout(() => {
+          const redirectPath = ROLE_REDIRECTS[data.role] || "/dashboard";
+          router.push(redirectPath);
+        }, 1000);
+      } else {
+        const errorMessage = 'message' in data ? data.message : "Invalid credentials";
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Network error. Please check your connection and try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const togglePasswordVisibility = (): void => {
+    setShowPassword(prev => !prev);
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <Toaster />
+      
+      <main className="flex-1 flex items-center justify-center px-4 py-8">
+        <div className="w-full max-w-md">
+          <div className="bg-background shadow-lg rounded-lg p-8 border">
+            <div className="text-center mb-8">
+              <HyperText 
+                className="text-3xl font-bold mb-2" 
+                text="Welcome Back" 
+              />
+              <p className="text-muted-foreground text-sm">
+                Enter your credentials to access your account
+              </p>
             </div>
-            <Footer />
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium">
+                  Email Address
+                </Label>
+                <Input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  disabled={isLoading}
+                  className="w-full"
+                  autoComplete="email"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-sm font-medium">
+                  Password
+                </Label>
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    disabled={isLoading}
+                    className="w-full pr-10"
+                    autoComplete="current-password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    disabled={isLoading}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex justify-end">
+                <Link 
+                  href="/auth/password/forgot"
+                  className="text-sm text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+                >
+                  Forgot your password?
+                </Link>
+              </div>
+
+              <Button 
+                type="submit" 
+                className="w-full" 
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing in...
+                  </>
+                ) : (
+                  "Sign In"
+                )}
+              </Button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <p className="text-sm text-muted-foreground">
+                Don't have an account?{" "}
+                <Link 
+                  href="/auth/register" 
+                  className="text-primary hover:underline font-medium"
+                >
+                  Sign up
+                </Link>
+              </p>
+            </div>
+          </div>
         </div>
-    );
+      </main>
+      
+      <Footer />
+    </div>
+  );
 }
