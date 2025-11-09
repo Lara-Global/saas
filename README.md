@@ -228,19 +228,5 @@ We welcome contributions! See our [Contributing Guide](CONTRIBUTING.md) for deta
 ### 💡 **Feature Requests**
 Got ideas? [Open an issue](https://github.com/Lara-Global/Payment-Gateway/issues) or join our [Discord](https://discord.gg/lara)
 
----
-
-## 📜 **License**
-
-MIT © [LARA Global](https://github.com/Lara-Global)
-
----
-
-<div align="center">
-
-
-*Star us if LARA helped you build something awesome!* ⭐
-
-[⬆ Back to Top](#-lara-payment-gateway)
 
 </div>
